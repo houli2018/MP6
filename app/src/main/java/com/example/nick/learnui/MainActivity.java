@@ -7,6 +7,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.lib.Blocks;
+
 public class MainActivity extends AppCompatActivity {
     public WebView webView;
 
@@ -118,34 +120,68 @@ public class MainActivity extends AppCompatActivity {
         image[7][8] = this.findViewById(R.id.image78);
         image[7][9] = this.findViewById(R.id.image79);
         image[7][10] = this.findViewById(R.id.image710);
+
+        text = this.findViewById(R.id.textView2);
     }
-    public void onClickUpdate(android.view.View input) {
-        count++;
-        if (count % 2 == 0) {
-            text.setText(R.string.a);
-            image[0][0].setImageResource(R.drawable.solid_white);
+    //Left button onClick event.
+    public void onClickLeft(android.view.View input) {
+        this.current.moveAllLeft();
+        this.current.moveAllDown();
+        display();
+
+
+    }
+    //Right button onClick event.
+    public void onClickRight(android.view.View input) {
+        this.current.moveAllRight();
+        this.current.moveAllDown();
+        display();
+
+    }
+    //Rotate button onClick event.
+    public void onClickRotate(android.view.View input) {
+        Blocks.currentBlocks.get(Blocks.currentBlocks.size() - 1).rotate();
+        display();
+
+
+    }
+    //Reset button onClick event.
+    public void onClickReset(android.view.View input) {
+        if (current == null) {
+            createBlocks();
+
         } else {
-            text.setText(R.string.b);
-            image[0][0].setImageResource(R.drawable.solid_black);
+            current.createAllBlocks();
+        }
+        display();
+
+
+    }
+    Blocks current;
+
+    public void createBlocks() {
+        current = new Blocks();
+    }
+    public void display() {
+        if (current == null) {
+            return;
 
         }
-
-
-    }
-    public void onClickReset(android.view.View input) {
-        for(int i = 0; i < image.length; i++) {
-            for (int j = 0; j < image[i].length; j++) {
-                if (count % 2 == 0) {
-                    image[i][j].setImageResource(R.drawable.solid_white);
-                } else {
+        current.upDateBoard();
+        for(int i = 0; i < current.board.length; i++) {
+            for (int j = 0; j < current.board[i].length; j++) {
+                if (current.board[i][j] != null) {
                     image[i][j].setImageResource(R.drawable.solid_black);
+
+                } else {
+                    image[i][j].setImageResource(R.drawable.solid_white);
 
                 }
 
             }
 
         }
-        count++;
 
     }
+
 }

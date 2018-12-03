@@ -16,27 +16,36 @@ public class Bit {
         this.Yvalue = setYvalue;
     }
     public boolean moveDown() {
-        if (Yvalue++ > 10) {
+
+        this.Yvalue++;
+        if (Yvalue < 0 || Yvalue >= 11) {
             return false;
 
         }
-        this.Yvalue++;
         return true;
     }
+    public Bit copy() {
+        Bit toReturn = new Bit();
+        toReturn.Xvalue = this.Xvalue;
+        toReturn.Yvalue = this.Yvalue;
+        return toReturn;
+    }
     public boolean moveRight() {
-        if (Xvalue++ > 7) {
+
+        this.Xvalue++;
+        if (Xvalue < 0 || Xvalue >= 8) {
             return false;
 
         }
-        this.Xvalue++;
         return true;
     }
     public boolean moveLeft() {
-        if (Xvalue-- < 0) {
+
+        this.Xvalue--;
+        if (Xvalue < 0 || Xvalue >= 8) {
             return false;
 
         }
-        this.Xvalue--;
         return true;
     }
 }
