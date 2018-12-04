@@ -7,11 +7,6 @@ public class Blocks {
     public static Integer score;
 
     public void cancleLines() {
-        if (!currentBlocks.get(currentBlocks.size() - 1).canNotMove()) {
-            //System.out.println("CanNotMove");
-            //return;
-
-        }
         int l = this.scored();
         System.out.println(l);
         if (l < 0) {

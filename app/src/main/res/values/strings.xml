@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LearnUI</string>
+    <string name="app_name">Tetris</string>
     <string name="a">hello_world</string>
     <string name="b">goodbye_world</string>
     <string name="score">a</string>

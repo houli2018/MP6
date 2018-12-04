@@ -9,6 +9,10 @@ import android.widget.TextView;
 
 import com.example.lib.Blocks;
 
+import java.sql.Time;
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class MainActivity extends AppCompatActivity {
     public WebView webView;
 
@@ -149,12 +153,22 @@ public class MainActivity extends AppCompatActivity {
     public void onClickReset(android.view.View input) {
         if (current == null) {
             createBlocks();
+            current.createAllBlocks();
 
         } else {
             current.createAllBlocks();
         }
         display();
 
+
+    }
+    public void onClickDown(android.view.View input) {
+        if (current == null) {
+            return;
+
+        }
+        current.moveAllDown();
+        display();
 
     }
     Blocks current;
