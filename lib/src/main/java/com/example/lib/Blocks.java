@@ -4,7 +4,7 @@ import com.example.lib.Bit;
 import java.util.ArrayList;
 
 public class Blocks {
-    public static Integer score;
+    public static Integer score = 0;
 
     public void cancleLines() {
         int l = this.scored();
@@ -29,6 +29,7 @@ public class Blocks {
             }
 
         }
+        score += 10;
         this.board = upDateBoard();
         cancleLines();
 
@@ -98,6 +99,7 @@ public class Blocks {
     //Very Important.
 
     public static ArrayList<AllBlock> currentBlocks;
+
 
     public Blocks() {
         board = new Bit[8][11];
@@ -243,7 +245,6 @@ public class Blocks {
 
 
         }
-        cancleLines();
     }
     public void moveAllLeft() {
         if (currentBlocks == null) {
@@ -329,6 +330,40 @@ public class Blocks {
 
     public class AllBlock {
         public boolean unmovable = false;
+
+        public boolean Stopped() {
+            if (bits == null || edge == null) {
+                //System.out.println("true");
+                return true;
+
+            }
+            int[] Y = new int[4];
+            for (int i = 0; i < 4; i++) {
+                Y[i] = bits[i].Yvalue;
+
+
+            }
+            boolean UnMoved = true;
+            moveAllDown();
+            for (int i = 0; i < 4; i++) {
+                if (Y[i] != bits[i].Yvalue) {
+                    UnMoved = false;
+
+                }
+
+
+            }
+            cancleLines();
+            if (UnMoved) {
+                return true;
+
+            } else {
+                return false;
+            }
+
+
+
+        }
 
         public boolean canNotMove() {
             if (bits == null || edge == null) {
