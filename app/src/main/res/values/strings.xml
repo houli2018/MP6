@@ -3,5 +3,10 @@
     <string name="a">hello_world</string>
     <string name="b">goodbye_world</string>
     <string name="score">a</string>
+    <string name="top_player">a</string>
+    <string name="top_player_ID">a</string>
+    <string name="top_player_Score">a</string>
+    <string name="saved_high_score_key">a</string>
+    <string name="saved_high_score_ID">a</string>
 
 </resources>

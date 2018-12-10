@@ -1,5 +1,7 @@
 package com.example.nick.learnui;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+
 import com.example.lib.Blocks;
 import com.example.lib.Bit;
 
@@ -17,7 +20,12 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 public class MainActivity extends AppCompatActivity {
+    public Timer timer;
+
     public WebView webView;
 
     public TextView text;
@@ -32,10 +40,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loading_page);
         final EditText userID = findViewById(R.id.editText);
         Button startButton = findViewById(R.id.button4);
+
+
+
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -273,6 +286,47 @@ public class MainActivity extends AppCompatActivity {
     public void onClickReset(android.view.View input) {
         setContentView(R.layout.score_page);
         final Button restartButton = findViewById(R.id.button6);
+
+
+        //APIs to store High Score Player(ID + Score)!
+        Context context = getApplicationContext();
+        SharedPreferences sharedPref1 = context.getSharedPreferences(getString(R.string.top_player_Score), Context.MODE_PRIVATE);
+        SharedPreferences sharedPref2 = context.getSharedPreferences(getString(R.string.top_player_ID), Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor1 = sharedPref1.edit();
+        final SharedPreferences.Editor editor2 = sharedPref2.edit();
+        int newHighScore = Blocks.score;
+        String newHighScoreID = ID.toString();
+
+
+
+        TextView highScoreText = findViewById(R.id.editText3);
+
+        Integer oldHighScore = sharedPref1.getInt(getString(R.string.saved_high_score_key), 0);
+        Object oldHighScoreID = sharedPref2.getString("Highscore", "None");
+        if (oldHighScore < newHighScore) {
+            editor1.putInt(getString(R.string.saved_high_score_key), newHighScore);
+            editor2.putString("Highscore", newHighScoreID);
+            editor1.apply();
+            editor2.apply();
+            highScoreText.setText("HighScore:" + newHighScoreID + "/" + Blocks.score.toString());
+
+        } else {
+            Integer oldHighScoreObject = oldHighScore;
+            highScoreText.setText("HighScore:" + oldHighScoreID + "/" + oldHighScoreObject.toString());
+
+
+        }
+        final Button restHighScore = findViewById(R.id.button7);
+        restHighScore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editor1.putInt(getString(R.string.saved_high_score_key), 0);
+                editor2.putString("Highscore", "empty");
+                editor1.apply();
+                editor2.apply();
+            }
+        });
+
         restartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -431,6 +485,34 @@ public class MainActivity extends AppCompatActivity {
 
         }
         scoreText.setText(ID + " your score:" + Blocks.score.toString());
+
+    }
+
+    public void atuoTimer() {
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (current == null) {
+                    current = new Blocks();
+                    current.createAllBlocks();
+                    display();
+                    return;
+
+                }
+                if (current.currentBlocks == null
+                        || current.currentBlocks.size() == 0
+                        || current.currentBlocks.get(current.currentBlocks.size() - 1).Stopped()) {
+                    current.createAllBlocks();
+                    display();
+                    return;
+
+                }
+                current.cancleLines();
+                display();
+
+            }
+        }, 1000, 1000);
 
     }
 
