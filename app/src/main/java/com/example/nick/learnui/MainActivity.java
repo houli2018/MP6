@@ -2,6 +2,7 @@ package com.example.nick.learnui;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Handler;
 import android.support.annotation.MainThread;
 import android.support.v7.app.AppCompatActivity;
@@ -46,8 +47,9 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loading_page);
-        final EditText userID = findViewById(R.id.editText);
         Button startButton = findViewById(R.id.button4);
+        final EditText userID = findViewById(R.id.editText);
+        final EditText userColor = findViewById(R.id.editText4);
 
 
 
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ID = userID.getText();
+                setColor = userColor.getText().toString();
                 setContentView(R.layout.activity_main);
                 current = new Blocks();
                 //find image
@@ -474,6 +477,32 @@ public class MainActivity extends AppCompatActivity {
     public void createBlocks() {
         current = new Blocks();
     }
+
+    //Set Background Image
+
+    public String setColor;
+
+    public static void setColor(ImageView image, String input) {
+        if (input == null || input.length() == 0) {
+            image.setImageResource(R.drawable.solid_black);
+            return;
+        } else if (input.equals("solid black")) {
+            image.setImageResource(R.drawable.solid_black);
+            return;
+        } else if (input.equals(("pink"))) {
+            image.setImageResource(R.drawable.pink);
+            return;
+        } else if (input.equals(("tree")) || input.equals("green")) {
+            image.setImageResource(R.drawable.tree);
+            return;
+        } else {
+            image.setImageResource(R.drawable.solid_black);
+            return;
+
+        }
+
+    }
+
     public void display() {
         if (current == null) {
             return;
@@ -483,7 +512,7 @@ public class MainActivity extends AppCompatActivity {
         for(int i = 0; i < current.board.length; i++) {
             for (int j = 0; j < current.board[i].length; j++) {
                 if (current.board[i][j] != null) {
-                    image[i][j].setImageResource(R.drawable.solid_black);
+                    setColor(image[i][j], setColor);
 
                 } else {
                     image[i][j].setImageResource(R.drawable.solid_white);
