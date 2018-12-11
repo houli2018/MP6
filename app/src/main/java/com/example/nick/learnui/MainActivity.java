@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
 
     public CharSequence ID;
 
+    public String userDiff;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -50,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         Button startButton = findViewById(R.id.button4);
         final EditText userID = findViewById(R.id.editText);
         final EditText userColor = findViewById(R.id.editText4);
+        final EditText userDifficulty = findViewById(R.id.editText5);
 
 
 
@@ -58,6 +61,29 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 ID = userID.getText();
                 setColor = userColor.getText().toString();
+                userDiff = userDifficulty.getText().toString();
+                if (userDiff == null || userDiff.length() == 0) {
+                    difficulty = 1;
+
+                } else if (userDiff.equals("1")) {
+                    difficulty = 1;
+
+                } else if (userDiff.equals("2")) {
+                    difficulty = 2;
+
+                } else if (userDiff.equals("3")) {
+                    difficulty = 3;
+
+                } else if (userDiff.equals("4")) {
+                    difficulty = 4;
+
+                } else if (userDiff.equals("5")) {
+                    difficulty = 5;
+
+                } else {
+                    difficulty = 1;
+
+                }
                 setContentView(R.layout.activity_main);
                 current = new Blocks();
                 //find image
@@ -286,6 +312,11 @@ public class MainActivity extends AppCompatActivity {
     }
     //Reset button onClick event.
     public void onClickReset(android.view.View input) {
+        RestartPage();
+
+
+    }
+    public void RestartPage() {
         timer.cancel();
         isStarted = false;
         setContentView(R.layout.score_page);
@@ -441,7 +472,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
     }
     boolean isStarted = false;
     public void onClickDown(android.view.View input) {
@@ -503,7 +533,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    boolean isEnded = false;
     public void display() {
+        if (isEnded) {
+            isEnded = false;
+            RestartPage();
+        }
         if (current == null) {
             return;
 
@@ -533,6 +568,9 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    int periodic = 1200;
+    int difficulty = 1;
+
     public void atuoTimer() {
         timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -548,6 +586,14 @@ public class MainActivity extends AppCompatActivity {
                 if (current.currentBlocks == null
                         || current.currentBlocks.size() == 0
                         || current.currentBlocks.get(current.currentBlocks.size() - 1).Stopped()) {
+                    if (current.board[2][0] != null) {
+                        timer.cancel();
+                        isStarted = false;
+                        isEnded = true;
+                        handler.post(runnableDisplay);
+                        return;
+
+                    }
                     current.createAllBlocks();
                     handler.post(runnableDisplay);
                     return;
@@ -557,7 +603,7 @@ public class MainActivity extends AppCompatActivity {
                 handler.post(runnableDisplay);
 
             }
-        }, 1000, 1000);
+        }, (periodic / difficulty) , (periodic / difficulty));
 
     }
 
