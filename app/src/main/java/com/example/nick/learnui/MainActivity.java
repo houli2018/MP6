@@ -2,6 +2,8 @@ package com.example.nick.learnui;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.support.annotation.MainThread;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -156,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
                 scoreText = findViewById(R.id.editText2);
 
 
-
             }
         });
 
@@ -263,7 +264,6 @@ public class MainActivity extends AppCompatActivity {
     //Left button onClick event.
     public void onClickLeft(android.view.View input) {
         this.current.moveAllLeft();
-        this.current.moveAllDown();
         display();
 
 
@@ -271,7 +271,6 @@ public class MainActivity extends AppCompatActivity {
     //Right button onClick event.
     public void onClickRight(android.view.View input) {
         this.current.moveAllRight();
-        this.current.moveAllDown();
         display();
 
     }
@@ -284,6 +283,8 @@ public class MainActivity extends AppCompatActivity {
     }
     //Reset button onClick event.
     public void onClickReset(android.view.View input) {
+        timer.cancel();
+        isStarted = false;
         setContentView(R.layout.score_page);
         final Button restartButton = findViewById(R.id.button6);
 
@@ -439,8 +440,16 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+    boolean isStarted = false;
     public void onClickDown(android.view.View input) {
-        if (current == null) {
+        if (!isStarted) {
+            atuoTimer();
+            isStarted = true;
+        } else {
+            timer.cancel();
+            isStarted = false;
+        }
+        /*if (current == null) {
             current = new Blocks();
             current.createAllBlocks();
             display();
@@ -456,7 +465,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
         current.cancleLines();
-        display();
+        display();*/
 
 
     }
@@ -487,6 +496,13 @@ public class MainActivity extends AppCompatActivity {
         scoreText.setText(ID + " your score:" + Blocks.score.toString());
 
     }
+    Handler handler = new Handler();
+    Runnable runnableDisplay = new Runnable() {
+        @Override
+        public void run() {
+            display();
+        }
+    };
 
     public void atuoTimer() {
         timer = new Timer();
@@ -496,7 +512,7 @@ public class MainActivity extends AppCompatActivity {
                 if (current == null) {
                     current = new Blocks();
                     current.createAllBlocks();
-                    display();
+                    handler.post(runnableDisplay);
                     return;
 
                 }
@@ -504,12 +520,12 @@ public class MainActivity extends AppCompatActivity {
                         || current.currentBlocks.size() == 0
                         || current.currentBlocks.get(current.currentBlocks.size() - 1).Stopped()) {
                     current.createAllBlocks();
-                    display();
+                    handler.post(runnableDisplay);
                     return;
 
                 }
                 current.cancleLines();
-                display();
+                handler.post(runnableDisplay);
 
             }
         }, 1000, 1000);
